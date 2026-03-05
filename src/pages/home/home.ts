@@ -7,8 +7,6 @@
 // 导入配置化服务
 import { homeConfigService } from '../../services/home.config.service';
 import type { GameConfig, BannerConfig } from '../../config/home.types';
-import './styles/home.css';
-import './config-manager/config-manager.css';
 
 // ===== 类型定义 =====
 interface Game {

@@ -5,7 +5,6 @@
 
 console.log('[Main] ========== main.ts 开始加载 ==========');
 
-import './index.css';
 import Phaser from 'phaser';
 
 // 导入配置

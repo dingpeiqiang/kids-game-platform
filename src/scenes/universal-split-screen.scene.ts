@@ -135,13 +135,7 @@ export class UniversalSplitScreenScene extends Phaser.Scene {
     backText.setOrigin(0.5);
 
     backBtn.on('pointerdown', () => {
-      // 检测当前路径，决定跳转目标
-      const basePath = '/kids-game-platform/';
-      if (window.location.pathname.startsWith(basePath)) {
-        window.location.href = basePath;
-      } else {
-        window.location.href = '/';
-      }
+      window.location.href = '/';
     });
   }
 
