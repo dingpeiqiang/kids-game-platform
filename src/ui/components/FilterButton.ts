@@ -2,12 +2,13 @@ import { DeviceUtil } from '@/utils/device.util';
 
 /**
  * 筛选按钮组件
+ * 只显示图标，类似游戏中的颜色按钮
  * 支持全部、收藏、分类筛选
  */
 export class FilterButton {
   private container: Phaser.GameObjects.Container;
   private bg: Phaser.GameObjects.Graphics;
-  private text!: Phaser.GameObjects.Text;
+  private innerBg: Phaser.GameObjects.Graphics;
   private isActive = false;
 
   constructor(
@@ -21,6 +22,7 @@ export class FilterButton {
   ) {
     this.container = scene.add.container(x, y);
     this.bg = scene.add.graphics();
+    this.innerBg = scene.add.graphics();
     this.isActive = active;
     this.create();
   }
@@ -29,59 +31,54 @@ export class FilterButton {
    * 创建按钮
    */
   private create(): void {
-    const btnWidth = this.getLabelWidth();
-    const btnHeight = 36;
+    const btnSize = DeviceUtil.getOptimalFontSize(48);
 
     this.drawButton(this.isActive);
 
-    this.text = this.scene.add.text(0, 0, this.label, {
-      font: `bold ${DeviceUtil.getOptimalFontSize(16)}px "Microsoft YaHei", Arial`,
-      color: this.isActive ? '#ffffff' : '#636E72',
-    }).setOrigin(0.5, 0.5);
-
-    this.container.add([this.bg, this.text]);
+    this.container.add([this.bg, this.innerBg]);
     this.container.setData('label', this.label);
 
-    this.setupInteraction(btnWidth, btnHeight);
-  }
-
-  /**
-   * 获取按钮宽度（根据文字长度自适应）
-   */
-  private getLabelWidth(): number {
-    // 基础宽度 + 每个字符约16像素
-    const baseWidth = 40;
-    const charWidth = 16;
-    return Math.max(100, baseWidth + this.label.length * charWidth);
+    this.setupInteraction(btnSize);
   }
 
   /**
    * 绘制按钮
    */
   private drawButton(active: boolean): void {
-    const btnWidth = this.getLabelWidth();
-    const btnHeight = 36;
+    const btnSize = DeviceUtil.getOptimalFontSize(48);
+    const padding = DeviceUtil.getOptimalFontSize(6);
 
     this.bg.clear();
+    this.innerBg.clear();
+
+    // 外圆边框
+    this.bg.fillStyle(0xffffff, 1);
+    this.bg.fillCircle(0, 0, btnSize / 2);
+    
     if (active) {
-      this.bg.fillStyle(Phaser.Display.Color.HexStringToColor(this.color).color, 1);
-      this.bg.fillRoundedRect(-btnWidth / 2, -btnHeight / 2, btnWidth, btnHeight, 18);
-      this.bg.lineStyle(2, Phaser.Display.Color.HexStringToColor(this.color).color, 1);
+      this.bg.lineStyle(4, Phaser.Display.Color.HexStringToColor(this.color).color, 1);
     } else {
-      this.bg.fillStyle(0xffffff, 0.7);
-      this.bg.fillRoundedRect(-btnWidth / 2, -btnHeight / 2, btnWidth, btnHeight, 18);
-      this.bg.lineStyle(2, 0xBDC3C7, 0.5);
+      this.bg.lineStyle(3, Phaser.Display.Color.HexStringToColor(this.color).color, 0.5);
     }
-    this.bg.strokeRoundedRect(-btnWidth / 2, -btnHeight / 2, btnWidth, btnHeight, 18);
+    this.bg.strokeCircle(0, 0, btnSize / 2);
+
+    // 内圆填充
+    if (active) {
+      this.innerBg.fillStyle(Phaser.Display.Color.HexStringToColor(this.color).color, 0.8);
+      this.innerBg.fillCircle(0, 0, btnSize / 2 - padding);
+    } else {
+      this.innerBg.fillStyle(Phaser.Display.Color.HexStringToColor(this.color).color, 0.3);
+      this.innerBg.fillCircle(0, 0, btnSize / 2 - padding);
+    }
   }
 
   /**
    * 设置交互
    */
-  private setupInteraction(btnWidth: number, btnHeight: number): void {
+  private setupInteraction(btnSize: number): void {
     this.bg.setInteractive(
-      new Phaser.Geom.Rectangle(-btnWidth / 2, -btnHeight / 2, btnWidth, btnHeight),
-      Phaser.Geom.Rectangle.Contains,
+      new Phaser.Geom.Circle(0, 0, btnSize / 2),
+      Phaser.Geom.Circle.Contains,
     );
 
     this.bg.on('pointerdown', () => {
@@ -89,16 +86,23 @@ export class FilterButton {
     });
 
     this.bg.on('pointerover', () => {
-      const btnW = this.getLabelWidth();
-      this.bg.clear();
-      this.bg.fillStyle(this.isActive ? Phaser.Display.Color.HexStringToColor(this.color).color : 0xffffff, 0.9);
-      this.bg.fillRoundedRect(-btnW / 2, -btnHeight / 2, btnW, btnHeight, 18);
-      this.bg.lineStyle(2, this.isActive ? Phaser.Display.Color.HexStringToColor(this.color).color : 0x74B9FF, 1);
-      this.bg.strokeRoundedRect(-btnW / 2, -btnHeight / 2, btnW, btnHeight, 18);
+      this.scene.tweens.killTweensOf(this.container);
+      this.scene.tweens.add({
+        targets: this.container,
+        scale: 1.15,
+        duration: 100,
+        ease: 'Quad.Out',
+      });
     });
 
     this.bg.on('pointerout', () => {
-      this.drawButton(this.isActive);
+      this.scene.tweens.killTweensOf(this.container);
+      this.scene.tweens.add({
+        targets: this.container,
+        scale: 1,
+        duration: 100,
+        ease: 'Quad.Out',
+      });
     });
   }
 
@@ -108,7 +112,6 @@ export class FilterButton {
   public setActive(active: boolean): void {
     this.isActive = active;
     this.drawButton(active);
-    this.text.setStyle({ color: active ? '#ffffff' : '#636E72' });
   }
 
   /**

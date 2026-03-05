@@ -932,12 +932,23 @@ function initKeyboardNavigation(): void {
 function loadGameScript(gameId: string): void {
   console.log('加载游戏脚本，游戏ID:', gameId);
 
+  // 检查是否已经加载过游戏脚本
+  const existingScript = document.querySelector('script[src="/src/main.ts"]');
+  if (existingScript) {
+    console.log('游戏脚本已加载，直接启动游戏');
+    // 设置游戏类型并启动
+    (window as any).__SELECTED_GAME_TYPE__ = gameId;
+    return;
+  }
+
   const gameScript = document.createElement('script');
   gameScript.type = 'module';
   gameScript.src = '/src/main.ts';
 
   gameScript.onload = () => {
     console.log('✓ 游戏脚本加载成功');
+    // 设置游戏类型并启动
+    (window as any).__SELECTED_GAME_TYPE__ = gameId;
   };
 
   gameScript.onerror = (error) => {

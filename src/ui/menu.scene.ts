@@ -169,17 +169,15 @@ export class MenuScene extends BaseScene {
     const gameTypes = [...new Set(GAME_LIST.map(g => g.type))];
     const totalButtons = 2 + gameTypes.length; // 全部 + 收藏 + 各类型
     
-    // 计算最大可用宽度
+    // 圆形按钮大小
+    const btnSize = DeviceUtil.getOptimalFontSize(48);
+    
+    // 计算最大可用宽度和间距
     const maxAvailableWidth = this.scale.width * 0.9;
-    const minGap = deviceInfo.type === 'mobile' ? 8 : 12;
-    
-    // 计算按钮宽度（自适应）
-    let btnWidth = Math.min(120, Math.floor((maxAvailableWidth - (totalButtons - 1) * minGap) / totalButtons));
-    btnWidth = Math.max(80, btnWidth); // 最小宽度限制
-    
-    const gap = Math.min(minGap, Math.floor((maxAvailableWidth - totalButtons * btnWidth) / (totalButtons - 1)));
-    const totalWidth = totalButtons * btnWidth + (totalButtons - 1) * gap;
-    let startX = centerX - totalWidth / 2 + btnWidth / 2;
+    const minGap = deviceInfo.type === 'mobile' ? 12 : 18;
+    const gap = Math.min(minGap, Math.floor((maxAvailableWidth - totalButtons * btnSize) / (totalButtons - 1)));
+    const totalWidth = totalButtons * btnSize + (totalButtons - 1) * gap;
+    let startX = centerX - totalWidth / 2 + btnSize / 2;
 
     this.filterButtons = [];
 
@@ -187,13 +185,13 @@ export class MenuScene extends BaseScene {
     this.filterButtons.push(
       new FilterButton(this, startX, btnY, FILTER_OPTIONS.ALL, '#74B9FF', (label) => this.handleFilter(label), true),
     );
-    startX += btnWidth + gap;
+    startX += btnSize + gap;
 
     // 收藏按钮
     this.filterButtons.push(
       new FilterButton(this, startX, btnY, FILTER_OPTIONS.FAVORITES, '#FFD93D', (label) => this.handleFilter(label)),
     );
-    startX += btnWidth + gap;
+    startX += btnSize + gap;
 
     // 分类按钮
     gameTypes.forEach((type) => {
@@ -202,7 +200,7 @@ export class MenuScene extends BaseScene {
       this.filterButtons.push(
         new FilterButton(this, startX, btnY, label, color, (label) => this.handleFilter(label)),
       );
-      startX += btnWidth + gap;
+      startX += btnSize + gap;
     });
   }
 
