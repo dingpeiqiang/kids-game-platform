@@ -31,14 +31,17 @@ export default defineConfig(({ mode }) => {
       minify: mode === 'production' ? 'esbuild' : false,
       cssCodeSplit: true,
       rollupOptions: {
-        input: {
-          main: fileURLToPath(new URL('./index.html', import.meta.url)),
-        },
         output: {
           manualChunks: {
             phaser: ['phaser'],
           },
         },
+      },
+    },
+    // 禁用 HTML 内联以避免问题
+    build: {
+      css: {
+        devSourcemap: false,
       },
     },
   };
