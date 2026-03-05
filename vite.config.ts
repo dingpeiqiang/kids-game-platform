@@ -29,17 +29,22 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist',
       minify: mode === 'production' ? 'esbuild' : false,
+      copyPublicDir: true, // 复制 public 目录到 dist
       rollupOptions: {
-        // 多页面应用配置
+        // 单页应用配置
         input: {
           main: fileURLToPath(new URL('./index.html', import.meta.url)),
-          game: fileURLToPath(new URL('./game.html', import.meta.url)),
         },
         output: {
           // 按模块拆分代码（便于自动化工具拆分生成）
           manualChunks: {
             phaser: ['phaser'],
+            vendor: ['js-cookie'],
           },
+          // 确保资源路径正确
+          assetFileNames: 'assets/[name]-[hash][extname]',
+          chunkFileNames: 'assets/[name]-[hash].js',
+          entryFileNames: 'assets/[name]-[hash].js',
         },
       },
     },

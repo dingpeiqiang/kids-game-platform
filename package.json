@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --mode development",
-    "build": "vite build --mode production",
+    "build": "vite build --mode production && node scripts/post-build.js",
+    "build:post": "node scripts/post-build.js",
     "preview": "vite preview",
     "lint": "eslint . --ext .ts,.js --fix",
     "format": "prettier --write ."
