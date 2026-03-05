@@ -5,8 +5,6 @@
 
 import { Player, PlayerId, Score } from './events/game-events';
 
-import { navigateTo } from '@/utils/path.util';
-
 /**
  * 分屏配置
  */
@@ -280,7 +278,7 @@ export class SplitScreenManager {
     const homeBtn = resultModal.querySelector('#home-btn');
     homeBtn?.addEventListener('click', () => {
       resultModal.remove();
-      navigateTo('/');
+      window.location.href = '/';
     });
   }
 

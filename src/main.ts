@@ -7,9 +7,6 @@ console.log('[Main] ========== main.ts 开始加载 ==========');
 
 import Phaser from 'phaser';
 
-// 导入路径工具
-import { navigateTo } from './utils/path.util';
-
 // 导入配置
 import { GAME_CONFIG } from './config/game.config';
 
@@ -311,103 +308,12 @@ function hideLoadingOverlay(): void {
 
 // ===== 入口 =====
 
-/**
- * 检查用户登录状态
- */
-function checkLoginStatus(): { isLoggedIn: boolean; user?: any } {
-  try {
-    const currentUserData = localStorage.getItem('currentUser');
-    if (!currentUserData) {
-      return { isLoggedIn: false };
-    }
-    return { isLoggedIn: true, user: JSON.parse(currentUserData) };
-  } catch (error) {
-    console.error('[Main] 检查登录状态出错:', error);
-    return { isLoggedIn: false };
-  }
-}
-
-/**
- * 动态加载首页模块
- */
-async function loadHomeModules(): Promise<void> {
-  try {
-    // 动态导入首页模块
-    await import('./pages/home/home.ts');
-    await import('./pages/home/config-manager/config-manager.ts');
-    console.log('[Main] ✓ 首页模块加载完成');
-  } catch (error) {
-    console.error('[Main] 首页模块加载失败:', error);
-  }
-}
-
-/**
- * 更新头部用户信息
- */
-function updateHeaderUserInfo(user: any): void {
-  const headerUserInfo = document.getElementById('headerUserInfo');
-  const headerAvatar = document.getElementById('headerAvatar');
-  const headerUsername = document.getElementById('headerUsername');
-  const headerLoginBtn = document.getElementById('headerLoginBtn');
-
-  if (headerUserInfo && headerAvatar && headerUsername) {
-    headerUserInfo.style.display = 'flex';
-    headerAvatar.textContent = user.avatar || '🐱';
-    headerUsername.textContent = user.username || '小玩家';
-    console.log('[Main] ✓ 头部用户信息已更新');
-  }
-  if (headerLoginBtn) {
-    headerLoginBtn.style.display = 'none';
-  }
-
-  // 移除 in-game 类，显示首页内容
-  document.body.classList.remove('in-game');
-
-  // 隐藏加载动画
-  const loadingOverlay = document.getElementById('loadingOverlay');
-  if (loadingOverlay) {
-    loadingOverlay.classList.add('hidden');
-  }
-}
-
-/**
- * 设置返回首页按钮
- */
-function setupBackButton(): void {
-  const backBtn = document.getElementById('backBtn');
-  if (backBtn) {
-    backBtn.addEventListener('click', () => {
-      // 清除 URL 参数，返回首页
-      navigateTo('/');
-    });
-  }
-}
-
 // 初始化游戏
 async function initGame(): Promise<void> {
   console.log('[Main] ===== 开始初始化 =====');
   LogUtil.log('[Main] ===== 游戏启动 =====');
 
   try {
-    // 检查登录状态
-    const loginStatus = checkLoginStatus();
-    console.log('[Main] 登录状态:', loginStatus.isLoggedIn);
-
-    // 获取 URL 参数
-    const params = new URLSearchParams(window.location.search);
-    const gameId = params.get('game');
-    const scene = params.get('scene');
-
-    // 如果已登录且没有游戏参数，加载首页模块
-    if (loginStatus.isLoggedIn && !gameId && !scene) {
-      console.log('[Main] 用户已登录，加载首页模块');
-      updateHeaderUserInfo(loginStatus.user);
-      await loadHomeModules();
-      setupBackButton();
-      console.log('[Main] ✓ 首页加载完成，无需初始化游戏');
-      return;
-    }
-
     // 1. 初始化设备
     console.log('[Main] 步骤1: 初始化设备');
     initDevice();
@@ -432,8 +338,6 @@ async function initGame(): Promise<void> {
     console.log('[Main] 步骤5: 启动场景');
     startScene(game);
     console.log('[Main] ✓ 场景启动完成');
-
-    setupBackButton();
 
     LogUtil.log('[Main] 游戏初始化完成');
   } catch (error) {

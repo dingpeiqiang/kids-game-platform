@@ -6,9 +6,157 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="description" content="童玩星球 - 儿童益智游戏平台，边玩边学，快乐成长">
   <title>童玩星球 - 儿童益智游戏平台</title>
-  <link rel="stylesheet" href="/src/index.css">
   <link rel="stylesheet" href="/src/pages/home/styles/home.css">
   <link rel="stylesheet" href="/src/pages/home/config-manager/config-manager.css">
+  <style>
+    /* 游戏容器样式 */
+    #game-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10000;
+      display: none;
+    }
+
+    /* 隐藏首页内容当游戏加载时 */
+    body.in-game > *:not(#game-container) {
+      display: none !important;
+    }
+
+    body.in-game #game-container {
+      display: block;
+    }
+
+    /* 头部用户信息样式 */
+    .header-user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-avatar {
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .header-username {
+      font-size: 14px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .logout-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 50%;
+      transition: all 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 107, 107, 0.2);
+      transform: rotate(15deg);
+    }
+
+    /* 头部登录按钮样式 */
+    .header-login-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 20px;
+      background: #74B9FF;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 2px 8px rgba(116, 185, 255, 0.3);
+    }
+
+    .header-login-btn:hover {
+      background: #5BA8F0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(116, 185, 255, 0.4);
+    }
+
+    /* 加载动画 */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10001;
+      transition: opacity 0.5s ease;
+    }
+
+    .loading-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-icon {
+      font-size: 64px;
+      animation: bounce 1s infinite;
+    }
+
+    .loading-text {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #666;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    /* 返回首页按钮 */
+    .back-btn {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #4A90E2;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 10002;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      display: none;
+    }
+
+    .back-btn:hover {
+      background: white;
+      transform: scale(1.05);
+    }
+
+    body.in-game .back-btn {
+      display: block;
+    }
+  </style>
 </head>
 <body>
   <!-- 头部导航区 -->
@@ -347,7 +495,7 @@
   <div id="game-container"></div>
 
   <!-- 返回首页按钮 -->
-  <button class="back-btn" id="backBtn">🏠 返回首页</button>
+  <button class="back-btn" onclick="window.location.href='/'">🏠 返回首页</button>
 
   <!-- 加载动画 -->
   <div class="loading-overlay" id="loadingOverlay">
@@ -380,9 +528,20 @@
           // 隐藏首页内容
           document.body.classList.add('in-game');
 
-          // 不需要动态加载脚本，因为 main.js 已经在页面顶部被 Vite 引入了
-          // 只需确保不隐藏首页即可
-          console.log('[登录检查] 等待主脚本处理登录流程');
+          // 动态加载游戏脚本
+          const script = document.createElement('script');
+          script.type = 'module';
+          script.src = '/src/main.ts';
+
+          script.onload = function() {
+            console.log('[登录检查] 游戏脚本加载成功');
+          };
+
+          script.onerror = function(error) {
+            console.error('[登录检查] 游戏脚本加载失败:', error);
+          };
+
+          document.body.appendChild(script);
         } else {
           console.log('[登录检查] 用户已登录:', JSON.parse(currentUserData).username);
 

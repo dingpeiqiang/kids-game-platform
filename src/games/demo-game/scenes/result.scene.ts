@@ -1,8 +1,6 @@
 import { BaseScene } from '@/core/scene.base';
 import { LogUtil } from '@/utils/log.util';
 
-import { navigateTo } from '@/utils/path.util';
-
 /**
  * 示例游戏结果场景（游戏结束）
  * 儿童友好：鼓励性的反馈、简单的操作
@@ -136,7 +134,7 @@ export class ResultScene extends BaseScene {
    */
   private backToHome(): void {
     LogUtil.log('ResultScene: 返回首页');
-    navigateTo('/');
+    window.location.href = '/';
   }
 
   /**
