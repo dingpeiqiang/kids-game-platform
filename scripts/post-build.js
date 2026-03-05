@@ -1,6 +1,6 @@
 /**
  * 构建后处理脚本
- * 移除 index.html 中无效的脚本引用
+ * 修复 index.html 中的内联脚本路径问题
  */
 
 import fs from 'fs';
@@ -14,9 +14,9 @@ console.log('[Post-Build] 开始处理 index.html...');
 try {
   let htmlContent = fs.readFileSync(indexPath, 'utf-8');
 
-  // 移除无效的脚本引用
+  // 移除可能残留的无效脚本引用（如果有）
   htmlContent = htmlContent.replace(
-    /<script type="module" src="\/src\/index\.ts"><\/script>/g,
+    /<script type="module" src="\/src\/main\.ts"><\/script>\s*/g,
     ''
   );
 

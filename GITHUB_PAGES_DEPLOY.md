@@ -3,7 +3,7 @@
 ## 部署步骤
 
 ### 1. 修改基础路径（已完成）
-- `vite.config.ts` 中已配置 `base: '/kids-game/'`
+- `vite.config.ts` 中已配置 `base: '/kids-game-platform/'`
 - 这个路径会自动应用到 GitHub Pages 部署
 
 ### 2. GitHub Actions 工作流（已创建）
@@ -46,7 +46,7 @@ git push origin main
 部署成功后，你的网站将在以下地址可访问：
 
 ```
-https://YOUR_USERNAME.github.io/kids-game/
+https://YOUR_USERNAME.github.io/kids-game-platform/
 ```
 
 将 `YOUR_USERNAME` 替换为你的 GitHub 用户名。

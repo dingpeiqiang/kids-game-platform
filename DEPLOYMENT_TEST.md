@@ -4,7 +4,7 @@
 
 将 `YOUR_USERNAME` 替换为你的 GitHub 用户名：
 ```
-https://YOUR_USERNAME.github.io/kids-game/
+https://YOUR_USERNAME.github.io/kids-game-platform/
 ```
 
 ## 本地预览生产构建
@@ -24,7 +24,7 @@ npx http-server dist -p 8080 -c-1
 ```bash
 npm run preview
 ```
-注意: Vite preview 无法正确模拟 GitHub Pages 的 `/kids-game/` 基础路径
+注意: Vite preview 无法正确模拟 GitHub Pages 的 `/kids-game-platform/` 基础路径
 
 ## 测试清单
 
@@ -35,10 +35,10 @@ npm run preview
 - [ ] Phaser 游戏引擎正确加载
 
 ### 2. 路由测试
-- [ ] 首页访问: `https://YOUR_USERNAME.github.io/kids-game/`
-- [ ] 直接访问 index.html: `https://YOUR_USERNAME.github.io/kids-game/index.html`
-- [ ] 游戏链接: `https://YOUR_USERNAME.github.io/kids-game/?game=color-game`
-- [ ] 场景链接: `https://YOUR_USERNAME.github.io/kids-game/?scene=LoginScene`
+- [ ] 首页访问: `https://YOUR_USERNAME.github.io/kids-game-platform/`
+- [ ] 直接访问 index.html: `https://YOUR_USERNAME.github.io/kids-game-platform/index.html`
+- [ ] 游戏链接: `https://YOUR_USERNAME.github.io/kids-game-platform/?game=color-game`
+- [ ] 场景链接: `https://YOUR_USERNAME.github.io/kids-game-platform/?scene=LoginScene`
 
 ### 3. 资源加载测试
 打开浏览器开发者工具（F12）检查：
@@ -66,9 +66,9 @@ npm run preview
 **原因**: 资源路径不正确
 
 **解决**:
-- 检查 `vite.config.ts` 中的 `base` 配置是否为 `/kids-game/`
+- 检查 `vite.config.ts` 中的 `base` 配置是否为 `/kids-game-platform/`
 - 重新构建项目: `npm run build`
-- 检查生成的 `dist/index.html` 中的资源路径是否包含 `/kids-game/`
+- 检查生成的 `dist/index.html` 中的资源路径是否包含 `/kids-game-platform/`
 
 ### 问题 2: Phaser 加载失败
 

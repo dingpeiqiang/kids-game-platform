@@ -3,7 +3,7 @@
 ## 已完成的优化
 
 ### 1. Vite 配置优化
-- ✅ 正确设置生产环境 `base: '/kids-game/'`
+- ✅ 正确设置生产环境 `base: '/kids-game-platform/'`
 - ✅ 移除了 `game.html` 输入（只保留 `index.html`）
 - ✅ 配置了代码分割（Phaser 独立 chunk）
 - ✅ 启用了 `copyPublicDir` 以复制 public 目录文件
@@ -56,7 +56,7 @@ gh api --method PUT \
 
 ### 4. 访问部署的网站
 ```
-https://YOUR_USERNAME.github.io/kids-game/
+https://YOUR_USERNAME.github.io/kids-game-platform/
 ```
 
 ## 本地测试构建
@@ -72,7 +72,7 @@ npx http-server dist -p 8080 -c-1
 ```
 访问: `http://localhost:8080/`
 
-**注意**: http-server 不支持 `/kids-game/` 路径测试，需要配置 Nginx 或使用 Vercel 等平台测试完整路径。
+**注意**: http-server 不支持 `/kids-game-platform/` 路径测试，需要配置 Nginx 或使用 Vercel 等平台测试完整路径。
 
 ### 3. 检查构建产物
 ```bash
@@ -95,8 +95,8 @@ ls -la dist/
 - [ ] Phaser.js 加载成功（约 1.4MB）
 
 ### 路由和导航
-- [ ] 首页: `https://YOUR_USERNAME.github.io/kids-game/`
-- [ ] 游戏链接: `https://YOUR_USERNAME.github.io/kids-game/?game=color-game`
+- [ ] 首页: `https://YOUR_USERNAME.github.io/kids-game-platform/`
+- [ ] 游戏链接: `https://YOUR_USERNAME.github.io/kids-game-platform/?game=color-game`
 - [ ] 刷新页面不出现 404
 - [ ] 返回首页按钮工作正常
 
@@ -122,7 +122,7 @@ ls -la dist/
 3. 查找红色的（失败的）请求
 
 **解决**:
-- 确认所有资源路径都以 `/kids-game/` 开头
+- 确认所有资源路径都以 `/kids-game-platform/` 开头
 - 检查 `vite.config.ts` 中的 `base` 配置
 - 重新构建并部署
 
@@ -229,7 +229,7 @@ ls -la dist/assets/
 ## 成功部署的标志
 
 ✅ GitHub Actions 运行成功（绿色勾号）
-✅ 可以访问 `https://YOUR_USERNAME.github.io/kids-game/`
+✅ 可以访问 `https://YOUR_USERNAME.github.io/kids-game-platform/`
 ✅ 页面加载无控制台错误
 ✅ 所有资源加载成功（200 状态码）
 ✅ 登录功能正常工作

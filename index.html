@@ -380,20 +380,9 @@
           // 隐藏首页内容
           document.body.classList.add('in-game');
 
-          // 动态加载游戏脚本
-          const script = document.createElement('script');
-          script.type = 'module';
-          script.src = '/src/main.ts';
-
-          script.onload = function() {
-            console.log('[登录检查] 游戏脚本加载成功');
-          };
-
-          script.onerror = function(error) {
-            console.error('[登录检查] 游戏脚本加载失败:', error);
-          };
-
-          document.body.appendChild(script);
+          // 不需要动态加载脚本，因为 main.js 已经在页面顶部被 Vite 引入了
+          // 只需确保不隐藏首页即可
+          console.log('[登录检查] 等待主脚本处理登录流程');
         } else {
           console.log('[登录检查] 用户已登录:', JSON.parse(currentUserData).username);
 
