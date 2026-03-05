@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="description" content="童玩星球 - 儿童益智游戏平台，边玩边学，快乐成长">
+  <title>童玩星球 - 儿童益智游戏平台</title>
+  <link rel="stylesheet" href="/src/pages/home/styles/home.css">
+  <link rel="stylesheet" href="/src/pages/home/config-manager/config-manager.css">
+  <style>
+    /* 游戏容器样式 */
+    #game-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10000;
+      display: none;
+    }
+
+    /* 隐藏首页内容当游戏加载时 */
+    body.in-game > *:not(#game-container) {
+      display: none !important;
+    }
+
+    body.in-game #game-container {
+      display: block;
+    }
+
+    /* 头部用户信息样式 */
+    .header-user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-avatar {
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .header-username {
+      font-size: 14px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .logout-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 50%;
+      transition: all 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 107, 107, 0.2);
+      transform: rotate(15deg);
+    }
+
+    /* 头部登录按钮样式 */
+    .header-login-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 20px;
+      background: #74B9FF;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 2px 8px rgba(116, 185, 255, 0.3);
+    }
+
+    .header-login-btn:hover {
+      background: #5BA8F0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(116, 185, 255, 0.4);
+    }
+
+    /* 加载动画 */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10001;
+      transition: opacity 0.5s ease;
+    }
+
+    .loading-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-icon {
+      font-size: 64px;
+      animation: bounce 1s infinite;
+    }
+
+    .loading-text {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #666;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    /* 返回首页按钮 */
+    .back-btn {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #4A90E2;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 10002;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      display: none;
+    }
+
+    .back-btn:hover {
+      background: white;
+      transform: scale(1.05);
+    }
+
+    body.in-game .back-btn {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- 头部导航区 -->
+  <header class="header" id="header">
+    <div class="header-container">
+      <!-- Logo -->
+      <div class="logo">
+        <div class="logo-icon">🌟</div>
+        <div class="logo-text">童玩星球</div>
+      </div>
+
+      <!-- 核心入口（儿童视角） -->
+      <nav class="nav-main">
+        <!-- 学龄选择 -->
+        <div class="grade-selector" id="gradeSelector">
+          <button class="grade-btn" id="gradeBtn">
+            <span class="grade-icon">📚</span>
+            <span class="grade-text" id="currentGrade">选择学龄</span>
+            <span class="grade-arrow">▼</span>
+          </button>
+          <div class="grade-dropdown" id="gradeDropdown">
+            <div class="grade-option" data-grade="k1">小班</div>
+            <div class="grade-option" data-grade="k2">中班</div>
+            <div class="grade-option" data-grade="k3">大班</div>
+            <div class="grade-option" data-grade="g1">小学1年级</div>
+            <div class="grade-option" data-grade="g2">小学2年级</div>
+            <div class="grade-option" data-grade="g3">小学3年级</div>
+            <div class="grade-option" data-grade="g4">小学4年级</div>
+            <div class="grade-option" data-grade="g5">小学5年级</div>
+            <div class="grade-option" data-grade="g6">小学6年级</div>
+          </div>
+        </div>
+
+        <!-- 用户信息（头部显示） -->
+        <div class="header-user-info" id="headerUserInfo" style="display: none;">
+          <div class="header-avatar" id="headerAvatar">🐱</div>
+          <div class="header-username" id="headerUsername">小玩家</div>
+          <button class="logout-btn" id="logoutBtn" title="退出登录">🚪</button>
+        </div>
+
+        <!-- 未登录提示 -->
+        <button class="header-login-btn" id="headerLoginBtn" style="display: none;">
+          <span>👤</span>
+          <span>登录</span>
+        </button>
+
+        <!-- 快速入口 -->
+        <div class="quick-links">
+          <a href="#my-games" class="quick-link">
+            <span class="quick-icon">🎮</span>
+            <span class="quick-text">我的游戏</span>
+          </a>
+          <a href="#quiz-center" class="quick-link quiz-link">
+            <span class="quick-icon">✏️</span>
+            <span class="quick-text">答题中心</span>
+          </a>
+        </div>
+      </nav>
+
+      <!-- 家长专属区 -->
+      <div class="parent-zone">
+        <button class="parent-btn" id="parentBtn">
+          <span class="parent-icon">🔒</span>
+          <span class="parent-text">家长中心</span>
+        </button>
+        <button class="config-btn" id="configBtn" title="配置管理">
+          <span class="config-icon">⚙️</span>
+          <span class="config-text">配置</span>
+        </button>
+        <button class="recharge-btn" id="rechargeBtn">
+          <span class="recharge-icon">💎</span>
+          <span class="recharge-text">点数充值</span>
+        </button>
+        <button class="hamburger-btn" id="hamburgerBtn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <!-- 汉堡菜单（移动端） -->
+      <div class="hamburger-menu" id="hamburgerMenu">
+        <button class="parent-btn-mobile" id="parentBtnMobile">
+          <span class="parent-icon">🔒</span>
+          <span class="parent-text">家长中心</span>
+        </button>
+        <button class="recharge-btn-mobile" id="rechargeBtnMobile">
+          <span class="recharge-icon">💎</span>
+          <span class="recharge-text">点数充值</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 核心视觉区 -->
+  <section class="hero-section">
+    <!-- 轮播Banner -->
+    <div class="banner-carousel" id="bannerCarousel">
+      <div class="banner-slides">
+        <div class="banner-slide active" data-game="math-puzzle">
+          <div class="banner-content">
+            <h2 class="banner-title">数字拼图大冒险</h2>
+            <p class="banner-desc">一年级专属益智游戏</p>
+            <button class="banner-play-btn">立即开始 ⭐</button>
+          </div>
+        </div>
+        <div class="banner-slide" data-game="quiz-activity">
+          <div class="banner-content">
+            <h2 class="banner-title">答题赢取游戏点数</h2>
+            <p class="banner-desc">答对1题赚1点，每日最多赚10点</p>
+            <button class="banner-play-btn">去答题 ✏️</button>
+          </div>
+        </div>
+        <div class="banner-slide" data-game="new-game">
+          <div class="banner-content">
+            <h2 class="banner-title">新游戏上线啦！</h2>
+            <p class="banner-desc">形状认知游戏，适合3-6岁宝宝</p>
+            <button class="banner-play-btn">试玩看看 🎉</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 轮播指示器 -->
+      <div class="banner-indicators">
+        <div class="indicator active" data-index="0"></div>
+        <div class="indicator" data-index="1"></div>
+        <div class="indicator" data-index="2"></div>
+      </div>
+
+      <!-- 左右箭头（电脑端） -->
+      <button class="banner-arrow left" id="bannerPrev">‹</button>
+      <button class="banner-arrow right" id="bannerNext">›</button>
+    </div>
+
+    <!-- 今日推荐游戏 -->
+    <div class="today-games">
+      <h3 class="section-title">今日推荐 ⭐</h3>
+      <div class="games-carousel" id="todayGamesCarousel">
+        <div class="game-card" data-game="creative-1">
+          <div class="game-cover">🎨</div>
+          <div class="game-name">颜色配对</div>
+          <div class="game-age">3-6岁</div>
+        </div>
+        <div class="game-card" data-game="puzzle-1">
+          <div class="game-cover">🔷</div>
+          <div class="game-name">拼图小能手</div>
+          <div class="game-age">3-6岁</div>
+        </div>
+        <div class="game-card" data-game="math-1">
+          <div class="game-cover">🔢</div>
+          <div class="game-name">数字王国</div>
+          <div class="game-age">4-7岁</div>
+        </div>
+        <div class="game-card" data-game="adventure-1">
+          <div class="game-cover">🌴</div>
+          <div class="game-name">丛林探险</div>
+          <div class="game-age">4-8岁</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 功能模块区 -->
+  <main class="main-content">
+    <!-- 模块1：学龄专属游戏区 -->
+    <section class="module-section grade-games-section" id="gradeGamesSection">
+      <h3 class="module-title">
+        <span class="title-icon">🎯</span>
+        <span class="title-text">学龄专属游戏</span>
+        <span class="grade-badge" id="gradeBadge">小学1年级</span>
+      </h3>
+
+      <!-- 游戏分类 -->
+      <div class="game-categories">
+        <button class="category-btn active" data-category="puzzle">
+          <span class="category-icon">🧩</span>
+          <span class="category-name">益智拼图</span>
+        </button>
+        <button class="category-btn" data-category="math">
+          <span class="category-icon">🔢</span>
+          <span class="category-name">数字算数</span>
+        </button>
+        <button class="category-btn" data-category="adventure">
+          <span class="category-icon">🗺️</span>
+          <span class="category-name">闯关冒险</span>
+        </button>
+        <button class="category-btn" data-category="creative">
+          <span class="category-icon">🎨</span>
+          <span class="category-name">手工创意</span>
+        </button>
+      </div>
+
+      <!-- 游戏列表 -->
+      <div class="games-grid" id="gradeGamesGrid">
+        <!-- 动态生成游戏卡片 -->
+      </div>
+    </section>
+
+    <!-- 模块2：答题中心 -->
+    <section class="module-section quiz-section" id="quiz-center">
+      <div class="quiz-banner">
+        <div class="quiz-content">
+          <h3 class="quiz-title">答题赚游戏点数</h3>
+          <p class="quiz-desc">边学边玩，轻松赚点</p>
+          <div class="quiz-rules">
+            <span class="rule-item">✓ 答对1题赚1点</span>
+            <span class="rule-item">✓ 每日最多赚10点</span>
+            <span class="rule-item">✓ 自动适配学龄</span>
+          </div>
+          <button class="quiz-btn" id="startQuizBtn">
+            <span class="btn-icon">✏️</span>
+            <span class="btn-text">开始答题</span>
+          </button>
+        </div>
+        <div class="quiz-decoration">
+          <div class="decoration-star star-1">⭐</div>
+          <div class="decoration-star star-2">✨</div>
+          <div class="decoration-star star-3">🌟</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 模块3：儿童版个人中心 -->
+    <section class="module-section profile-section" id="my-games">
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="avatar" id="userAvatar">🐱</div>
+          <div class="user-info">
+            <h4 class="username" id="username">小玩家123</h4>
+            <div class="points-display">
+              <span class="points-icon">💎</span>
+              <span class="points-label">当前可玩：</span>
+              <span class="points-value" id="userPoints">8</span>
+              <span class="points-unit">点</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-content">
+          <!-- 最近玩过的游戏 -->
+          <div class="recent-games">
+            <h5 class="recent-title">最近玩过 🕐</h5>
+            <div class="recent-games-list" id="recentGamesList">
+              <div class="recent-game-card" data-game="color-match">
+                <div class="recent-cover">🎨</div>
+                <div class="recent-name">颜色配对</div>
+              </div>
+              <div class="recent-game-card" data-game="shape-sort">
+                <div class="recent-cover">🔷</div>
+                <div class="recent-name">形状分类</div>
+              </div>
+              <div class="recent-game-card" data-game="number-count">
+                <div class="recent-cover">🔢</div>
+                <div class="recent-name">数字城堡</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 点数不足提示 -->
+          <div class="points-notice" id="pointsNotice" style="display: none;">
+            <div class="notice-icon">😿</div>
+            <div class="notice-text">游戏点数用完啦～</div>
+            <button class="notice-btn" id="earnPointsBtn">答题赚点</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 底部信息区 -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h5 class="footer-title">家长须知</h5>
+        <ul class="footer-list">
+          <li><a href="#rules">游戏疲劳点规则</a></li>
+          <li><a href="#earn-rules">答题赚点规则</a></li>
+          <li><a href="#age-guide">学龄适配说明</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h5 class="footer-title">安全保障</h5>
+        <ul class="footer-list">
+          <li><a href="#no-ads">无广告承诺</a></li>
+          <li><a href="#no-links">无第三方链接</a></li>
+          <li><a href="#privacy">儿童信息保护</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h5 class="footer-title">平台信息</h5>
+        <ul class="footer-list">
+          <li><a href="#agreement">用户协议</a></li>
+          <li><a href="#privacy-policy">隐私政策</a></li>
+          <li><a href="#contact">联系我们</a></li>
+          <li><a href="#icp">平台备案号</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="slogan">边玩边学，快乐成长——童玩星球儿童游戏平台</p>
+      <p class="copyright">©2026 童玩星球 所有游戏均为原创/授权</p>
+    </div>
+  </footer>
+
+  <!-- 家长验证弹窗 -->
+  <div class="modal" id="parentModal">
+    <div class="modal-content">
+      <button class="modal-close" id="parentModalClose">✕</button>
+      <h3 class="modal-title">家长验证</h3>
+      <p class="modal-desc">请输入家长密码或验证码</p>
+      <input type="password" class="modal-input" id="parentPassword" placeholder="请输入密码">
+      <button class="modal-btn" id="parentConfirm">确认</button>
+    </div>
+  </div>
+
+  <!-- 加载动画 -->
+  <div class="loading-screen" id="loadingScreen" style="display: none;">
+    <div class="loading-content">
+      <div class="loading-animation">🚀</div>
+      <p class="loading-text">马上就好啦～</p>
+    </div>
+  </div>
+
+  <!-- 提示弹窗 -->
+  <div class="toast" id="toast">
+    <div class="toast-content">
+      <span class="toast-icon" id="toastIcon">✨</span>
+      <span class="toast-text" id="toastText"></span>
+    </div>
+  </div>
+
+  <!-- 游戏容器 -->
+  <div id="game-container"></div>
+
+  <!-- 返回首页按钮 -->
+  <button class="back-btn" onclick="window.location.href='/'">🏠 返回首页</button>
+
+  <!-- 加载动画 -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-icon">🚀</div>
+    <div class="loading-text">游戏加载中...</div>
+  </div>
+
+  <!-- 登录检查脚本 - 在页面加载时立即执行 -->
+  <script>
+    (function() {
+      console.log('[登录检查] 页面开始加载');
+
+      // 检查是否在游戏模式
+      const params = new URLSearchParams(window.location.search);
+      const gameId = params.get('game');
+
+      if (gameId) {
+        console.log('[登录检查] 游戏模式，跳过登录检查');
+        return;
+      }
+
+      // 检查登录状态
+      try {
+        const currentUserData = localStorage.getItem('currentUser');
+        console.log('[登录检查] localStorage中的currentUser:', currentUserData);
+
+        if (!currentUserData) {
+          console.log('[登录检查] 用户未登录，加载登录场景');
+
+          // 隐藏首页内容
+          document.body.classList.add('in-game');
+
+          // 动态加载游戏脚本
+          const script = document.createElement('script');
+          script.type = 'module';
+          script.src = '/src/main.ts';
+
+          script.onload = function() {
+            console.log('[登录检查] 游戏脚本加载成功');
+          };
+
+          script.onerror = function(error) {
+            console.error('[登录检查] 游戏脚本加载失败:', error);
+          };
+
+          document.body.appendChild(script);
+        } else {
+          console.log('[登录检查] 用户已登录:', JSON.parse(currentUserData).username);
+
+          // 确保移除 in-game 类
+          document.body.classList.remove('in-game');
+
+          // 隐藏加载动画
+          const loadingOverlay = document.getElementById('loadingOverlay');
+          if (loadingOverlay) {
+            loadingOverlay.classList.add('hidden');
+          }
+
+          // 更新头部用户信息
+          const user = JSON.parse(currentUserData);
+          const headerUserInfo = document.getElementById('headerUserInfo');
+          const headerAvatar = document.getElementById('headerAvatar');
+          const headerUsername = document.getElementById('headerUsername');
+          const headerLoginBtn = document.getElementById('headerLoginBtn');
+
+          if (headerUserInfo && headerAvatar && headerUsername) {
+            headerUserInfo.style.display = 'flex';
+            headerAvatar.textContent = user.avatar || '🐱';
+            headerUsername.textContent = user.username || '小玩家';
+            console.log('[登录检查] ✓ 头部用户信息已更新');
+          }
+          if (headerLoginBtn) {
+            headerLoginBtn.style.display = 'none';
+          }
+        }
+      } catch (error) {
+        console.error('[登录检查] 检查登录状态出错:', error);
+      }
+    })();
+  </script>
+
+  <!-- 首页脚本（仅在已登录时加载） -->
+  <script type="module" src="/src/pages/home/home.ts"></script>
+  <script type="module" src="/src/pages/home/config-manager/config-manager.ts"></script>
+</body>
+</html>
