@@ -1,0 +1,26 @@
+{
+  "name": "kids-game-platform",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --mode development",
+    "build": "vite build --mode production && node scripts/post-build.js",
+    "build:post": "node scripts/post-build.js",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .ts,.js --fix",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "phaser": "^3.80.1",
+    "js-cookie": "^3.0.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11",
+    "eslint": "^8.56.0",
+    "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "@typescript-eslint/parser": "^6.18.1",
+    "prettier": "^3.2.2",
+    "@types/js-cookie": "^3.0.6"
+  }
+}

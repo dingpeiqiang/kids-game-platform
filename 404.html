@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>页面未找到 - 童玩星球</title>
+  <script>
+    // 对于 GitHub Pages SPA 应用，重定向到首页
+    const path = window.location.pathname;
+    const search = window.location.search;
+    const hash = window.location.hash;
+
+    // 如果不是根路径，重定向到首页并保留查询参数和哈希
+    if (path !== '/kids-game-platform/' && path !== '/kids-game-platform') {
+      window.location.replace('/kids-game-platform/' + search + hash);
+    } else {
+      // 在根路径但不是 index.html，加载 index.html
+      window.location.replace('/kids-game-platform/index.html' + search + hash);
+    }
+  </script>
+</head>
+<body>
+  <noscript>
+    <p>页面正在跳转，如果没有自动跳转，请点击 <a href="/kids-game-platform/">这里</a></p>
+  </noscript>
+</body>
+</html>
