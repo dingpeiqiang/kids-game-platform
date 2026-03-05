@@ -44,7 +44,15 @@ export class LoginScene extends BaseScene {
         this.scene.start('MenuScene');
       } else {
         LogUtil.log('LoginScene: 跳转到首页');
-        window.location.href = '/';
+        // 检测当前路径，决定跳转目标
+        const basePath = '/kids-game-platform/';
+        if (window.location.pathname.startsWith(basePath)) {
+          // 已经在正确的路径，重新加载
+          window.location.href = basePath;
+        } else {
+          // 在其他路径（开发环境），跳转到根目录
+          window.location.href = '/';
+        }
       }
       return;
     }
@@ -287,7 +295,13 @@ export class LoginScene extends BaseScene {
     );
 
     bg.on('pointerdown', () => {
-      window.location.href = '/';
+      // 检测当前路径，决定跳转目标
+      const basePath = '/kids-game-platform/';
+      if (window.location.pathname.startsWith(basePath)) {
+        window.location.href = basePath;
+      } else {
+        window.location.href = '/';
+      }
     });
 
     bg.on('pointerover', () => {
@@ -472,7 +486,15 @@ export class LoginScene extends BaseScene {
           this.scene.start('MenuScene');
         } else {
           LogUtil.log('LoginScene: 开始跳转到首页');
-          window.location.href = '/';
+          // 检测当前路径，决定跳转目标
+          const basePath = '/kids-game-platform/';
+          if (window.location.pathname.startsWith(basePath)) {
+            // 在生产环境，跳转到正确的路径
+            window.location.href = basePath;
+          } else {
+            // 在开发环境，跳转到根目录
+            window.location.href = '/';
+          }
         }
       });
     } catch (error) {
