@@ -7,6 +7,15 @@ console.log('[Main] ========== main.ts 开始加载 ==========');
 
 import Phaser from 'phaser';
 
+// 导入样式,确保在构建时正确处理
+import './pages/home/styles/global.css';
+import './pages/home/styles/home.css';
+import './pages/home/config-manager/config-manager.css';
+
+// 导入首页逻辑模块(这些模块会自己初始化)
+import './pages/home/home';
+import './pages/home/config-manager/config-manager';
+
 // 导入配置
 import { GAME_CONFIG } from './config/game.config';
 
@@ -215,6 +224,14 @@ function startScene(game: Phaser.Game): void {
       LogUtil.log('[Main] 启动登录场景');
       game.scene.start('LoginScene');
     } else {
+      // 检查用户是否已登录
+      const currentUserData = localStorage.getItem('currentUser');
+      if (currentUserData) {
+        LogUtil.log('[Main] 用户已登录,不启动游戏引擎');
+        // 不启动任何场景,让首页正常显示
+        return;
+      }
+
       // 默认启动登录场景
       LogUtil.log('[Main] 启动默认场景: LoginScene');
       game.scene.start('LoginScene');
