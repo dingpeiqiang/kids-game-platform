@@ -30,4 +30,9 @@ export const GAME_CONFIG = {
   // 父容器
   parent: 'game-container',
   backgroundColor: '#87CEEB',
+  // 资源加载器配置
+  loader: {
+    baseURL: '/kids-game/',
+    path: '',
+  },
 } as const;
