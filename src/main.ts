@@ -125,7 +125,6 @@ function createGame(): Phaser.Game {
     fps: GAME_CONFIG.fps,
     input: GAME_CONFIG.input,
     audio: GAME_CONFIG.audio,
-    loader: GAME_CONFIG.loader,
     scale: {
       mode: Phaser.Scale.FIT,
       autoCenter: Phaser.Scale.CENTER_BOTH,
