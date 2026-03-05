@@ -2,6 +2,8 @@ import { BaseBattleScene, BattleMode } from '@/core/battle.base';
 import { LogUtil } from '@/utils/log.util';
 import { DeviceUtil } from '@/utils/device.util';
 
+import { navigateTo } from '@/utils/path.util';
+
 /**
  * 形状识别游戏场景
  * 儿童友好：识别圆形、方形、三角形等基本形状
@@ -124,7 +126,7 @@ export class GameScene extends BaseBattleScene {
     this.backButton.on('pointerdown', () => {
       LogUtil.log('ShapeGameScene: 返回首页');
       // 返回到首页
-      window.location.href = '/';
+      navigateTo('/');
     });
 
     this.backButton.on('pointerover', () => {
@@ -378,7 +380,7 @@ export class GameScene extends BaseBattleScene {
 
       // 返回主页按钮
       const homeBtn = this.createResultButton(0, 160, '返回主页', () => {
-        window.location.href = '/';
+        navigateTo('/');
       });
 
       resultContainer.add([resultBg, winnerText, scoreText, restartBtn, homeBtn]);

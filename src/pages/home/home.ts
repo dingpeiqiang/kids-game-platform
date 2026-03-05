@@ -7,6 +7,8 @@
 // 导入配置化服务
 import { homeConfigService } from '../../services/home.config.service';
 import type { GameConfig, BannerConfig } from '../../config/home.types';
+// 导入路径工具
+import { getBasePath, navigateTo } from '../../utils/path.util';
 
 // ===== 类型定义 =====
 interface Game {
@@ -222,6 +224,7 @@ interface PageElements {
 let elements: PageElements | null = null;
 
 // ===== 工具函数 =====
+
 function showToast(message: string, icon: string = '✨', duration: number = 2000): void {
   if (!elements || !elements.toast) return;
   elements.toastIcon.textContent = icon;
@@ -352,8 +355,8 @@ function navigateToGame(gameId: string): void {
       console.log('游戏ID:', gameId);
       console.log('游戏名称:', game.name);
       console.log('================================');
-      // 使用 replace 并添加时间戳确保重新加载
-      window.location.replace(targetUrl + '&t=' + Date.now());
+      // 使用 navigateTo 工具函数，自动处理基础路径
+      navigateTo(targetUrl + '&t=' + Date.now(), true);
     }, 500);
   }, 1000);
 }
@@ -792,7 +795,7 @@ function initLogout(): void {
       localStorage.removeItem('currentUser');
       showToast('已退出登录', '👋');
       setTimeout(() => {
-        window.location.href = '/';
+        navigateTo('/');
       }, 500);
     }
   });

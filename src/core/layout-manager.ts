@@ -5,6 +5,8 @@
 
 import { Player, PlayerId, Score, HexColor } from './events';
 
+import { navigateTo } from '@/utils/path.util';
+
 /**
  * 布局配置
  */
@@ -315,7 +317,7 @@ export class LayoutManager {
     const homeBtn = this.resultModal.querySelector('.home');
     homeBtn?.addEventListener('click', () => {
       this.hideResult();
-      window.location.href = '/';
+      navigateTo('/');
     });
 
     document.body.appendChild(this.resultModal);

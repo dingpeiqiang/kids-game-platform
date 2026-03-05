@@ -4,6 +4,8 @@ import { SafeUtil } from '@/utils/safe.util';
 import { SAFE_RULES } from '@/config/constant';
 import { AuthUtil } from '@/utils/auth.util';
 
+import { navigateTo } from '@/utils/path.util';
+
 /**
  * 示例游戏主场景（数字拼图）
  * 儿童友好：简单的点击操作、友好反馈
@@ -73,7 +75,7 @@ export class GameScene extends BaseScene {
 
     this.backButton.on('pointerdown', () => {
       LogUtil.log('GameScene: 返回首页');
-      window.location.href = '/';
+      navigateTo('/');
     });
 
     this.backButton.on('pointerover', () => {

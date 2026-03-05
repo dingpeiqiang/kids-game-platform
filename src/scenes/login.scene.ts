@@ -6,6 +6,7 @@
 import { BaseScene } from '@/core/scene.base';
 import { LogUtil } from '@/utils/log.util';
 import { userService } from '@/services/user.service';
+import { navigateTo } from '@/utils/path.util';
 
 export class LoginScene extends BaseScene {
   // UI元素
@@ -44,7 +45,7 @@ export class LoginScene extends BaseScene {
         this.scene.start('MenuScene');
       } else {
         LogUtil.log('LoginScene: 跳转到首页');
-        window.location.href = '/';
+        navigateTo('/');
       }
       return;
     }
@@ -287,7 +288,7 @@ export class LoginScene extends BaseScene {
     );
 
     bg.on('pointerdown', () => {
-      window.location.href = '/';
+      navigateTo('/');
     });
 
     bg.on('pointerover', () => {
@@ -472,7 +473,7 @@ export class LoginScene extends BaseScene {
           this.scene.start('MenuScene');
         } else {
           LogUtil.log('LoginScene: 开始跳转到首页');
-          window.location.href = '/';
+          navigateTo('/');
         }
       });
     } catch (error) {

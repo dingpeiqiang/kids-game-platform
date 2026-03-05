@@ -7,6 +7,9 @@ console.log('[Main] ========== main.ts 开始加载 ==========');
 
 import Phaser from 'phaser';
 
+// 导入路径工具
+import { navigateTo } from './utils/path.util';
+
 // 导入配置
 import { GAME_CONFIG } from './config/game.config';
 
@@ -375,11 +378,7 @@ function setupBackButton(): void {
   if (backBtn) {
     backBtn.addEventListener('click', () => {
       // 清除 URL 参数，返回首页
-      const url = new URL(window.location.href);
-      url.searchParams.delete('game');
-      url.searchParams.delete('scene');
-      url.searchParams.delete('mode');
-      window.location.href = url.toString();
+      navigateTo('/');
     });
   }
 }

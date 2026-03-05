@@ -3,6 +3,8 @@ import { LogUtil } from '@/utils/log.util';
 import { DeviceUtil } from '@/utils/device.util';
 import { userService } from '@/services/user.service';
 
+import { navigateTo } from '@/utils/path.util';
+
 /**
  * 游戏ID类型
  */
@@ -296,7 +298,7 @@ export class BattleSelectScene extends BaseScene {
 
     this.backButton.on('pointerdown', () => {
       LogUtil.log('BattleSelectScene: 返回首页');
-      window.location.href = '/';
+      navigateTo('/');
     });
   }
 
@@ -322,7 +324,7 @@ export class BattleSelectScene extends BaseScene {
           this.activateFocusedButton();
           break;
         case 'Escape':
-          window.location.href = '/';
+          navigateTo('/');
           break;
       }
     });

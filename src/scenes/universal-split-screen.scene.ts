@@ -9,6 +9,8 @@ import { dualScreenAdapter } from '../core/dual-screen-adapter';
 import { sceneRegistry } from '../core/scene-registry';
 import { getGameInfo } from '../config/game-id-mapping';
 
+import { navigateTo } from '@/utils/path.util';
+
 /**
  * 通用双屏对战场景
  */
@@ -135,7 +137,7 @@ export class UniversalSplitScreenScene extends Phaser.Scene {
     backText.setOrigin(0.5);
 
     backBtn.on('pointerdown', () => {
-      window.location.href = '/';
+      navigateTo('/');
     });
   }
 

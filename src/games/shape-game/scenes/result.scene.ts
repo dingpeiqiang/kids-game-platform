@@ -2,6 +2,8 @@ import { BaseScene } from '@/core/scene.base';
 import { LogUtil } from '@/utils/log.util';
 import { SCENE_NAMES } from '@/config/constant';
 
+import { navigateTo } from '@/utils/path.util';
+
 /**
  * 形状识别游戏结果场景
  */
@@ -102,7 +104,7 @@ export class ResultScene extends BaseScene {
 
   private backToHome(): void {
     LogUtil.log('ShapeGameResultScene: 返回首页');
-    window.location.href = '/';
+    navigateTo('/');
   }
 
   public setScore(score: number): void {
