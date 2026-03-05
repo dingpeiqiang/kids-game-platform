@@ -4,7 +4,7 @@ import { fileURLToPath, URL } from 'node:url';
 export default defineConfig(({ mode }) => {
   return {
     // 基础路径
-    base: mode === 'production' ? '/kids-game/' : '/',
+    base: mode === 'production' ? '/kids-game-platform/' : '/',
     // 别名配置（模块化便捷引用）
     resolve: {
       alias: {
