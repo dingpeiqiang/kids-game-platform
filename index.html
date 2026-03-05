@@ -373,24 +373,9 @@
 
         if (!currentUserData) {
           console.log('[登录检查] 用户未登录，加载登录场景');
-
           // 隐藏首页内容
           document.body.classList.add('in-game');
-
-          // 动态加载游戏脚本
-          const script = document.createElement('script');
-          script.type = 'module';
-          script.src = '/src/main.ts';
-
-          script.onload = function() {
-            console.log('[登录检查] 游戏脚本加载成功');
-          };
-
-          script.onerror = function(error) {
-            console.error('[登录检查] 游戏脚本加载失败:', error);
-          };
-
-          document.body.appendChild(script);
+          // 登录场景将由主脚本处理
         } else {
           console.log('[登录检查] 用户已登录:', JSON.parse(currentUserData).username);
 

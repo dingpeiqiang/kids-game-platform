@@ -6,17 +6,23 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>页面未找到 - 童玩星球</title>
   <script>
-    // 对于 GitHub Pages SPA 应用，重定向到首页
+    // 对于 GitHub Pages SPA 应用，将所有路由重定向到首页
     const path = window.location.pathname;
     const search = window.location.search;
     const hash = window.location.hash;
 
-    // 如果不是根路径，重定向到首页并保留查询参数和哈希
-    if (path !== '/kids-game-platform/' && path !== '/kids-game-platform') {
-      window.location.replace('/kids-game-platform/' + search + hash);
+    // 如果路径包含 /kids-game-platform/ 但不是首页，重定向到首页
+    if (path.startsWith('/kids-game-platform/')) {
+      // 如果是根路径，跳过（已经是首页）
+      if (path === '/kids-game-platform/' || path === '/kids-game-platform/index.html') {
+        // 不需要重定向
+      } else {
+        // 重定向到首页，保留查询参数和哈希
+        window.location.replace('/kids-game-platform/' + search + hash);
+      }
     } else {
-      // 在根路径但不是 index.html，加载 index.html
-      window.location.replace('/kids-game-platform/index.html' + search + hash);
+      // 其他情况也重定向到首页
+      window.location.replace('/kids-game-platform/' + search + hash);
     }
   </script>
 </head>
