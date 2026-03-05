@@ -6,8 +6,6 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="description" content="童玩星球 - 儿童益智游戏平台，边玩边学，快乐成长">
   <title>童玩星球 - 儿童益智游戏平台</title>
-  <link rel="stylesheet" href="./src/pages/home/styles/home.css">
-  <link rel="stylesheet" href="./src/pages/home/config-manager/config-manager.css">
   <style>
     /* 游戏容器样式 */
     #game-container {
@@ -528,10 +526,10 @@
           // 隐藏首页内容
           document.body.classList.add('in-game');
 
-          // 动态加载游戏脚本
+          // 动态加载游戏脚本（构建后的版本）
           const script = document.createElement('script');
           script.type = 'module';
-          script.src = './src/main.ts';
+          script.src = './assets/main.js';
 
           script.onload = function() {
             console.log('[登录检查] 游戏脚本加载成功');
@@ -576,9 +574,5 @@
       }
     })();
   </script>
-
-  <!-- 首页脚本（仅在已登录时加载） -->
-  <script type="module" src="./src/pages/home/home.ts"></script>
-  <script type="module" src="./src/pages/home/config-manager/config-manager.ts"></script>
 </body>
 </html>
